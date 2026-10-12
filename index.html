@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HALLOWEEN LUCKY SPIN | SuperRich Thailand</title>
+<meta name="description" content="Halloween Lucky Spin - SuperRich Thailand">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&family=Luckiest+Guy&display=swap');
+
+:root{
+  --purple:#3b0750;
+  --purple2:#5c0b72;
+  --lime:#dfff00;
+  --orange:#ff8a00;
+  --cyan:#18d8d2;
+  --ink:#180d27;
+  --white:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Kanit,Arial,sans-serif;background:#25032f;color:#fff}
+body{
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 15% 15%,rgba(223,255,0,.13),transparent 22%),
+    radial-gradient(circle at 85% 10%,rgba(24,216,210,.12),transparent 20%),
+    linear-gradient(135deg,#24002e,#51086a 48%,#23002d);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;
+  background-image:radial-gradient(#fff 1px,transparent 1px);
+  background-size:23px 23px;
+}
+.wrap{width:min(1180px,94vw);margin:auto;padding:22px 0 50px;position:relative}
+.hero{
+  border:3px solid #12081a;border-radius:28px;overflow:hidden;
+  background:#420650 url("halloween-theme.png") center/cover no-repeat;
+  min-height:360px;position:relative;box-shadow:0 16px 50px #100014;
+}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(40,0,55,.86),rgba(40,0,55,.18) 58%,rgba(40,0,55,.5))}
+.hero-content{position:relative;z-index:1;padding:42px 44px;max-width:620px}
+.brand{font-weight:800;letter-spacing:.04em;font-size:20px}
+.kicker{font-family:"Luckiest Guy",cursive;font-size:32px;margin-top:18px}
+h1{font-family:"Luckiest Guy",cursive;font-size:clamp(58px,9vw,105px);line-height:.86;margin:0;color:var(--lime);text-shadow:7px 7px 0 #11aaa9}
+.tag{display:inline-block;background:var(--lime);color:#25052f;padding:8px 20px;font-size:26px;font-weight:800;transform:rotate(-2deg);margin-top:20px;box-shadow:7px 7px 0 #111}
+.game{
+  margin-top:24px;display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:stretch
+}
+.panel{
+  background:rgba(25,4,35,.9);border:3px solid #12081a;border-radius:26px;padding:24px;
+  box-shadow:0 14px 35px rgba(0,0,0,.35)
+}
+.panel h2{font-family:"Luckiest Guy",cursive;letter-spacing:.04em;color:var(--lime);font-size:34px;margin:0 0 8px}
+.panel p{margin:4px 0 16px;color:#eee}
+.wheel-box{display:grid;place-items:center;min-height:540px;position:relative}
+canvas{width:min(500px,90vw);height:min(500px,90vw);max-width:100%;filter:drop-shadow(0 18px 18px rgba(0,0,0,.4))}
+.pointer{
+ position:absolute;top:6px;z-index:5;width:0;height:0;
+ border-left:22px solid transparent;border-right:22px solid transparent;border-top:48px solid var(--lime);
+ filter:drop-shadow(0 3px 0 #16091d);
+}
+.spin-btn{
+ border:4px solid #170b1c;background:var(--orange);color:#210621;
+ font-family:"Luckiest Guy",cursive;font-size:35px;padding:13px 36px;border-radius:18px;
+ cursor:pointer;box-shadow:0 8px 0 #a84800;transition:.12s;min-width:220px
+}
+.spin-btn:hover{transform:translateY(-2px)}
+.spin-btn:active{transform:translateY(5px);box-shadow:0 3px 0 #a84800}
+.spin-btn:disabled{opacity:.55;cursor:not-allowed}
+.status{text-align:center;font-size:18px;min-height:30px;margin-top:12px}
+.result{
+ display:none;margin-top:16px;padding:18px;border-radius:18px;background:#5c0b72;
+ border:2px dashed var(--lime);text-align:center
+}
+.result.show{display:block;animation:pop .35s ease}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.prize{font-size:34px;font-weight:800;color:var(--lime);line-height:1.1}
+.rules{display:grid;gap:12px;margin-top:18px}
+.rule{padding:14px 16px;background:#320540;border-radius:15px;border-left:5px solid var(--cyan)}
+.rule b{color:var(--lime)}
+.admin-note{font-size:13px;opacity:.7;margin-top:16px}
+.footer{text-align:center;opacity:.75;margin-top:18px;font-size:14px}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}
+.confetti i{position:absolute;width:9px;height:18px;animation:fall 1.6s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media(max-width:850px){
+ .game{grid-template-columns:1fr}
+ .hero{min-height:300px}
+ .hero-content{padding:30px 24px}
+ .wheel-box{min-height:470px}
+}
+
+.admin-tools{
+  margin-top:18px;
+  padding:14px 16px;
+  background:rgba(12,2,18,.72);
+  border:1px solid rgba(223,255,0,.35);
+  border-radius:16px;
+}
+.admin-toggle{
+  border:1px solid #dfff00;
+  background:#dfff00;
+  color:#180d27;
+  border-radius:10px;
+  padding:9px 14px;
+  font-family:Kanit,Arial,sans-serif;
+  font-weight:800;
+  cursor:pointer;
+}
+.admin-panel{display:none;margin-top:12px}
+.admin-panel.show{display:block}
+.admin-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.admin-row select,.admin-row button{
+  font-family:Kanit,Arial,sans-serif;
+  border-radius:10px;
+  padding:9px 12px;
+  border:2px solid #28102f;
+}
+.admin-row select{
+  background:#fff;
+  color:#180d27;
+  min-width:260px;
+}
+.lock-btn{
+  background:#dfff00;
+  color:#180d27;
+  font-weight:800;
+  cursor:pointer;
+}
+.unlock-btn{
+  background:#ff8a00;
+  color:#210621;
+  font-weight:800;
+  cursor:pointer;
+}
+.lock-state{margin-top:9px;font-size:14px}
+.locked-badge{
+  display:inline-block;
+  background:#dfff00;
+  color:#180d27;
+  padding:3px 9px;
+  border-radius:999px;
+  font-weight:800;
+  margin-left:5px;
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="brand">SUPERRICH THAILAND</div>
+      <div class="kicker">HALLOWEEN LUCKY SPIN</div>
+      <h1>HALLOWEEN</h1>
+      <div class="tag">LUCKY SPIN • ONE TIME ONLY</div>
+    </div>
+  </section>
+
+  <section class="game">
+    <div class="panel wheel-box">
+      <div class="pointer"></div>
+      <canvas id="wheel" width="700" height="700"></canvas>
+      <button class="spin-btn" id="spin">เริ่มหมุน! 🎃</button>
+      <div class="status" id="status">หมุนวงล้อเพื่อลุ้นรับรางวัล • เล่นได้ 1 ครั้งเท่านั้น</div>
+      <div class="result" id="result">
+        <div>✨ คุณได้รับ ✨</div>
+        <div class="prize" id="prize"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>YOU COULD WIN!</h2>
+      <p>หมุนวงล้อ แล้วรับรางวัลสุดพิเศษจากแคมเปญ Halloween</p>
+      <div class="rules">
+        <div class="rule">🎁 <b>ของรางวัล</b><br>Kitkat • ของรางวัล Halloween • ของรางวัลปลอบใจ</div>
+        <div class="rule">🎃 <b>วิธีเล่น</b><br>กด “เริ่มหมุน!” แล้วรอลุ้นผลรางวัล</div>
+        <div class="rule">✨ <b>กติกา</b><br>ผู้เล่นสามารถหมุนวงล้อได้เพียง 1 ครั้งเท่านั้น และไม่สามารถเล่นซ้ำหลังจากรับรางวัลแล้ว</div>
+        <div class="rule">🔒 <b>ระบบป้องกันการเล่นซ้ำ</b><br>ระบบจะจดจำสถานะการเล่นไว้ แม้ปิดหรือรีเฟรชหน้าเว็บก็ไม่สามารถหมุนซ้ำได้</div>
+      </div>
+      <div class="admin-note">
+        หมายเหตุ: เวอร์ชันนี้เป็นเกมฝั่งหน้าเว็บ (client-side) เหมาะสำหรับ GitHub Pages / prototype
+        หากต้องการจับรางวัลจริง ควรเพิ่มระบบ backend เพื่อป้องกันการแก้ผลจากฝั่งผู้เล่น
+      </div>
+
+      <div class="admin-tools">
+        <button class="admin-toggle" id="adminToggle" type="button">⚙️ ตั้งค่ารางวัล</button>
+
+        <div class="admin-panel" id="adminPanel">
+          <div class="admin-row">
+            <select id="prizeLockSelect" aria-label="เลือกรางวัลที่จะล็อก">
+              <option value="-1">🎲 สุ่มรางวัลตามปกติ</option>
+            </select>
+            <button class="lock-btn" id="lockPrizeBtn" type="button">🔒 ล็อกรางวัล</button>
+            <button class="unlock-btn" id="unlockPrizeBtn" type="button">🔓 ปลดล็อก</button>
+          </div>
+          <div class="lock-state" id="lockState">สถานะ: สุ่มรางวัลตามปกติ</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <div class="footer">HALLOWEEN LUCKY SPIN • ONE TIME ONLY</div>
+</div>
+<div class="confetti" id="confetti"></div>
+
+<script>
+const canvas = document.getElementById('wheel');
+const ctx = canvas.getContext('2d');
+const spinBtn = document.getElementById('spin');
+const statusEl = document.getElementById('status');
+const resultEl = document.getElementById('result');
+const prizeEl = document.getElementById('prize');
+
+const prizes = [
+  {name:'Kitkat', color:'#dfff00'},
+  {name:'ของรางวัล Halloween', color:'#18d8d2'},
+  {name:'ของรางวัลปลอบใจ', color:'#ff8a00'},
+  {name:'Kitkat', color:'#18d8d2'},
+  {name:'ของรางวัล Halloween', color:'#ff8a00'},
+  {name:'ของรางวัลปลอบใจ', color:'#dfff00'}
+];
+
+
+let angle = 0, spinning = false;
+let lockedPrize = Number(localStorage.getItem('halloweenLockedPrize') ?? -1);
+const playedKey = 'halloweenLuckySpinPlayed';
+let hasPlayed = localStorage.getItem(playedKey) === '1';
+
+const adminToggle = document.getElementById('adminToggle');
+const adminPanel = document.getElementById('adminPanel');
+const prizeLockSelect = document.getElementById('prizeLockSelect');
+const lockPrizeBtn = document.getElementById('lockPrizeBtn');
+const unlockPrizeBtn = document.getElementById('unlockPrizeBtn');
+const lockState = document.getElementById('lockState');
+
+prizes.forEach((p, i) => {
+  const option = document.createElement('option');
+  option.value = i;
+  option.textContent = `🔒 ${p.name}`;
+  prizeLockSelect.appendChild(option);
+});
+
+function updateLockUI(){
+  prizeLockSelect.value = String(lockedPrize);
+
+  if(lockedPrize >= 0 && lockedPrize < prizes.length){
+    lockState.innerHTML =
+      `สถานะ: <b>ล็อกรางวัล</b><span class="locked-badge">${prizes[lockedPrize].name}</span>`;
+  }else{
+    lockState.textContent = 'สถานะ: สุ่มรางวัลตามปกติ';
+  }
+}
+
+adminToggle.addEventListener('click', () => {
+  adminPanel.classList.toggle('show');
+});
+
+lockPrizeBtn.addEventListener('click', () => {
+  const index = Number(prizeLockSelect.value);
+  if(index < 0) return;
+
+  lockedPrize = index;
+  localStorage.setItem('halloweenLockedPrize', String(index));
+  updateLockUI();
+  statusEl.textContent = `🔒 ล็อกรางวัลไว้: ${prizes[index].name}`;
+});
+
+unlockPrizeBtn.addEventListener('click', () => {
+  lockedPrize = -1;
+  localStorage.removeItem('halloweenLockedPrize');
+  updateLockUI();
+  statusEl.textContent = '🎲 ปลดล็อกแล้ว — ระบบจะสุ่มรางวัลตามปกติ';
+});
+
+updateLockUI();
+
+function updatePlayState(){
+  if(hasPlayed){
+    spinBtn.disabled = true;
+    spinBtn.textContent = 'เล่นครบแล้ว ✓';
+    statusEl.textContent = '🔒 คุณใช้สิทธิ์เล่นเกมแล้ว • ไม่สามารถเล่นซ้ำได้';
+  }
+}
+updatePlayState();
+
+function drawWheel(){
+  const cx=350, cy=350, r=300;
+  ctx.clearRect(0,0,700,700);
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.rotate(angle);
+  const slice=Math.PI*2/prizes.length;
+
+  for(let i=0;i<prizes.length;i++){
+    const a=i*slice;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.arc(0,0,r,a,a+slice);
+    ctx.closePath();
+    ctx.fillStyle=prizes[i].color;
+    ctx.fill();
+    ctx.lineWidth=8;
+    ctx.strokeStyle='#1a0b20';
+    ctx.stroke();
+
+    ctx.save();
+    ctx.rotate(a+slice/2);
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillStyle='#1a0b20';
+    ctx.font='800 23px Kanit, Arial';
+    const words=prizes[i].name.split(' ');
+    let line='', lines=[];
+    words.forEach(w=>{
+      if((line+' '+w).trim().length>17){lines.push(line);line=w}else line=(line+' '+w).trim();
+    });
+    if(line)lines.push(line);
+    lines.slice(0,3).forEach((t,j)=>ctx.fillText(t,205,(j-((Math.min(lines.length,3)-1)/2))*30));
+    ctx.restore();
+  }
+  ctx.beginPath();ctx.arc(0,0,74,0,Math.PI*2);ctx.fillStyle='#2a0b39';ctx.fill();ctx.lineWidth=8;ctx.strokeStyle='#ff8a00';ctx.stroke();
+  ctx.fillStyle='#dfff00';ctx.font='800 48px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🎃',0,4);
+  ctx.restore();
+
+  // outer ring
+  ctx.beginPath();ctx.arc(cx,cy,r+4,0,Math.PI*2);ctx.lineWidth=15;ctx.strokeStyle='#ff8a00';ctx.stroke();
+}
+
+drawWheel();
+
+function winnerIndex(finalAngle){
+  const slice=2*Math.PI/prizes.length;
+  let a=(3*Math.PI/2 - finalAngle)%(2*Math.PI);
+  if(a<0)a+=2*Math.PI;
+  return Math.floor(a/slice)%prizes.length;
+}
+
+spinBtn.addEventListener('click',()=>{
+  if(spinning || hasPlayed)return;
+  spinning=true;
+  spinBtn.disabled=true;
+  resultEl.classList.remove('show');
+  statusEl.textContent = lockedPrize >= 0
+    ? '🔒 กำลังหมุนไปยังรางวัลที่ล็อกไว้...'
+    : '🔮 เวทมนตร์กำลังทำงาน...';
+
+  // Use the locked prize when admin has selected one; otherwise random.
+  const target = (lockedPrize >= 0 && lockedPrize < prizes.length)
+    ? lockedPrize
+    : Math.floor(Math.random()*prizes.length);
+  const slice=2*Math.PI/prizes.length;
+  const targetCenter=3*Math.PI/2-(target*slice+slice/2);
+  const extra=(6+Math.floor(Math.random()*4))*2*Math.PI;
+  const start=angle;
+  let end=targetCenter+extra;
+  while(end<start+extra) end+=2*Math.PI;
+  const duration=4200;
+  const t0=performance.now();
+
+  function animate(t){
+    const p=Math.min(1,(t-t0)/duration);
+    const ease=1-Math.pow(1-p,4);
+    angle=start+(end-start)*ease;
+    drawWheel();
+    if(p<1){requestAnimationFrame(animate)}
+    else{
+      angle=end%(2*Math.PI); drawWheel();
+      spinning=false; spinBtn.disabled=false;
+      const prize=prizes[target].name;
+      prizeEl.textContent=prize;
+      resultEl.classList.add('show');
+      statusEl.textContent='🎉 ยินดีด้วย! รับรางวัลของคุณได้เลย';
+      celebrate();
+    }
+  }
+  requestAnimationFrame(animate);
+});
+
+function celebrate(){
+  const box=document.getElementById('confetti');
+  box.innerHTML='';
+  for(let i=0;i<70;i++){
+    const e=document.createElement('i');
+    e.style.left=Math.random()*100+'vw';
+    e.style.top=(-10-Math.random()*20)+'vh';
+    e.style.background=['#dfff00','#ff8a00','#18d8d2','#fff'][Math.floor(Math.random()*4)];
+    e.style.transform=`rotate(${Math.random()*360}deg)`;
+    e.style.animationDelay=(Math.random()*.35)+'s';
+    box.appendChild(e);
+  }
+  setTimeout(()=>box.innerHTML='',2200);
+}
+</script>
+</body>
+</html>
